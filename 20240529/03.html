@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div id="app">
+			<!-- v-model 綁定使用者輸入的值 -->
+			<input type="text" v-model="form.text" />
+			<p>{{form.text}}</p>
+			<!-- v-model.number 綁定使用者輸入的值 並轉成數字-->
+			<input type="number" v-model.number="form.num" /> <br />
+			<br />
+			<!-- v-model.trim 綁定使用者輸入的值 並移除前後空白-->
+			<input type="text" v-model.trim="form.text" /><br />
+			<br />
+			<!-- v-model.lazy 在 change 時才更新 -->
+			<input type="text" v-model.lazy="form.text" />
+			<p>{{form.text}}</p>
+			<hr />
+
+			<!-- radio 和 checkbox 用 v-model 分組
+                v-model => 使用者輸入的值
+                value => 欄本身的值
+                value 沒有用 v-bind 的資料型態 所以是文字
+            -->
+			<input type="radio" v-model="form.radio" value="1" />
+			<input type="radio" v-model="form.radio" value="2" />
+			<input type="radio" v-model="form.radio" value="3" />
+			<br />
+
+			<!-- :value 內的值為 變數 -->
+			<input type="radio" v-model="form.radio2" :value="1" />
+			<!-- 呈現文字 須再加引號 <input type="radio" v-model="form.radio2" :value="'1'" /> -->
+			<input type="radio" v-model="form.radio2" :value="2" />
+			<input type="radio" v-model="form.radio2" :value="3" />
+			<br />
+
+			<template v-for="(option, index) in checkOptions">
+				<!-- 同時綁定 文字與格子 -->
+				<label :for="'check-' + index">{{option.label}}</label>
+				<input type="checkbox" :id="'check-' + index" :value="option.value" v-model="form.check" />
+			</template>
+			<br />
+			<br />
+
+			<select v-model="form.select">
+				<option v-for="option in selectOptions" :value="option.value">{{option.label}}</option>
+			</select>
+		</div>
+
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.27/vue.global.min.js"
+			integrity="sha512-jDpwxJN+g4BhXLdba5Z1rn2MpR9L5Wp3WVf2dJt5A0mkPHnHLZHZerpyX4JC9bM0pkCL7RmAR8FwOm02h7RKFg=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		></script>
+
+		<script>
+			Vue.createApp({
+				data() {
+					return {
+						form: {
+							text: "",
+							num: 0,
+							radio: undefined,
+							radio2: undefined,
+							check: ["comebuy"]
+						},
+						checkOptions: [
+							{ value: "KBK", label: "可不可" },
+							{ value: "50", label: "50嵐" },
+							{ value: "comebuy", label: "Come Buy" }
+						],
+						selectOptions: [
+							{ value: "v", label: "Vue" },
+							{ value: "a", label: "Angular" },
+							{ value: "r", label: "React" }
+						]
+					};
+				}
+			}).mount("#app");
+		</script>
+	</body>
+</html>
