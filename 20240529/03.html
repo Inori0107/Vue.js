@@ -7,6 +7,7 @@
 	</head>
 	<body>
 		<div id="app">
+			<!-- Modifiers -->
 			<!-- v-model 綁定使用者輸入的值 -->
 			<input type="text" v-model="form.text" />
 			<p>{{form.text}}</p>
@@ -40,8 +41,8 @@
 
 			<template v-for="(option, index) in checkOptions">
 				<!-- 同時綁定 文字與格子 -->
-				<label :for="'check-' + index">{{option.label}}</label>
 				<input type="checkbox" :id="'check-' + index" :value="option.value" v-model="form.check" />
+				<label :for="'check-' + index">{{option.label}}</label>
 			</template>
 			<br />
 			<br />

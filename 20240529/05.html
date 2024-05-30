@@ -10,7 +10,8 @@
 			<input type="button" :value="num" @click="num++" /> <br />
 			姓: <input type="text" v-model="lastName" /> <br />
 			名: <input type="text" v-model="firstName" /><br />
-			全名: {{fullName}} {{fullNameMethod()}}
+			全名: {{fullName}}
+			<!-- {{fullNameMethod()}} -->
 		</div>
 
 		<script
@@ -25,20 +26,21 @@
 				data() {
 					return {
 						num: 0,
-						firstName: "",
-						lastName: ""
+						lastName: "",
+						firstName: ""
 					};
 				},
+				// methods: {
+				// 	fullNameMethod() {
+				// 		console.log("methods 更新");
+				// 		return this.lastName + this.firstName;
+				// 	}
+				// },
+
 				// 產生唯讀資料 可提升效能
 				computed: {
 					fullName() {
 						console.log("computed 更新");
-						return this.lastName + this.firstName;
-					}
-				},
-				methods: {
-					fullNameMethod() {
-						console.log("methods 更新");
 						return this.lastName + this.firstName;
 					}
 				},

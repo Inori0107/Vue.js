@@ -14,9 +14,9 @@
 			<input type="button" value="notify3" @click="notify2('789', $event)" />
 			<br />
 
-			<input type="button" value="notify" @click="event => notify(event)" />
+			<!-- <input type="button" value="notify" @click="event => notify(event)" />
 			<input type="button" value="notify2" @click="() => notify2('456')" />
-			<input type="button" value="notify3" @click="() => notify3('789', event)" />
+			<input type="button" value="notify3" @click="() => notify3('789', event)" /> -->
 			<br />
 			<!-- .once 只觸發一次 -->
 			<input type="button" value="notify(once)" v-on:click.once="notify" />
@@ -64,11 +64,11 @@
 						alert(text);
 					},
 					add() {
-						// else return
 						if (this.input.length === 0) return;
-
 						this.list.push(this.input);
-						this.notify2(this.input);
+						// console.log(this.list);
+						// this.notify2(this.input);
+						// reset
 						this.input = "";
 					}
 				}
