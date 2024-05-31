@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 文字與新增 -->
+			<form @submit.prevent="addItem">
+				<input type="text" v-model="input" :style="{border: inputBorder}" placeholder="新增事項" />
+				<input type="submit" value="新增" />
+			</form>
+			<hr />
+			<!-- 按鈕列 -->
+			<Btn @click="markAF">全部標記為已完成</Btn>
+			<Btn @click="cancelMarkAll">全部標記為未完成</Btn>
+			<br />
+			<Btn @click="showAll">顯示全部</Btn>
+			<Btn @click="showFinish">顯示已完成</Btn>
+			<Btn @click="showUnFinish">顯示未完成</Btn>
+			<br />
+			<Btn @click="removeAll">清除全部</Btn>
+			<Btn @click="removeFinish">清除已完成</Btn>
+			<Btn @click="removeUnFinish">清除未完成</Btn>
+			<hr />
+			<!-- 顯示區 -->
+			<p>{{show}}</p>
+			<ul>
+				<li v-for="item in items">
+					<input type="checkbox" v-model="item.done" />
+					<del v-if="item.done">{{item.text}}</del>
+					<span v-else @dblclick="changeItem">{{item.text}}</span>
+				</li>
+			</ul>
+			<hr />
+			<!-- 提示文字 -->
+			<p>點兩下編輯清單文字，ESC取消編輯</p>
+		</div>
+
+		<script type="text/x-template" id="btn">
+			<button style="margin-right: 4px"><slot></slot></button>
+		</script>
+
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.27/vue.global.min.js"
+			integrity="sha512-jDpwxJN+g4BhXLdba5Z1rn2MpR9L5Wp3WVf2dJt5A0mkPHnHLZHZerpyX4JC9bM0pkCL7RmAR8FwOm02h7RKFg=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		></script>
+
+		<script>
+			const { ref, reactive, computed, watch, onMounted } = Vue;
+			Vue.createApp({
+				setup() {
+					// 文字與新增
+					const input = ref("");
+					const inputBorder = computed(() => {
+						if (input.value.length === 0) return "5px solid black";
+						else if (input.value.length < 2) return "5px solid red";
+						else return "5px solid green";
+					});
+
+					<!-- 顯示區 -->
+
+					const items = reactive([]);
+					const addItem = () => {
+						// 斷點(誤打)
+						if (input.value.length < 2) return;
+						// push 且 設定
+						items.push({ done: false, text: input.value });
+						// 清空
+						input.value = "";
+					};
+
+					const changeItem = () => {
+						// items.value[0].text = 0;
+						let finish = [];
+						finish = items.filter((item) => !item.done);
+						console.log(finish.length);
+					};
+
+					// 按鈕區
+					const show = ref(`目前顯示: 全部`);
+					const markAF = () => {
+						items.forEach((item) => {
+							item.done = true;
+						});
+					};
+					const cancelMarkAll = () => {
+						items.forEach((item) => {
+							item.done = false;
+						});
+					};
+					const showAll = () => {
+						show.value = `目前顯示: 全部，共${items.length}個`;
+					};
+					const showFinish = () => {
+						show.value = `目前顯示: 已完成，共${items.filter((item) => item.done).length}個`;
+					};
+					const showUnFinish = () => {
+						show.value = `目前顯示: 未完成，共${items.filter((item) => !item.done).length}個`;
+					};
+
+					const removeAll = () => {
+						items.splice(0, items.length);
+					};
+					const removeFinish = () => {
+						items.splice(items.filter((item) => item.done).length, 1);
+						// console.log(items.filter((item) => item.done));
+					};
+					const removeUnFinish = () => {
+						items.splice(items.filter((item) => !item.done).length, 1);
+					};
+
+					// JSON 儲存
+					// 監聽輸入 items 及 更新數量
+					watch(items, (item) => {
+						localStorage.vueTodo = JSON.stringify(item);
+						show.value = `目前顯示: 全部，共${item.length}個`;
+					});
+					// 在渲染頁面時
+					onMounted(() => {
+						const itemsJSON = JSON.parse(localStorage.vueTodo || "[]");
+						// 寫入 儲存的 JSON
+						Object.assign(items, itemsJSON);
+					});
+
+					return {
+						input,
+						inputBorder,
+
+						markAF,
+						cancelMarkAll,
+
+						showAll,
+						showFinish,
+						showUnFinish,
+
+						removeAll,
+						removeFinish,
+						removeUnFinish,
+
+						show,
+						items,
+						addItem,
+						changeItem
+					};
+				}
+			})
+				.component("Btn", {
+					template: "#btn"
+				})
+				.mount("#app");
+		</script>
+	</body>
+</html>
